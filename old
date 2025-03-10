@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Car Control</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #2c3e50, #000428);
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .container {
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .row {
+            display: flex;
+            gap: 15px;
+            margin: 10px;
+        }
+        button {
+            width: 100px;
+            height: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        .start-btn { background-color: green; color: white; }
+        .direction-btn { background-color: #3498db; color: white; }
+        .stop-btn { background-color: red; color: white; }
+        button:hover {
+            transform: scale(1.1);
+            opacity: 0.9;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ESP32 Car Control</h1>
+
+    <div class="container">
+        <button class="start-btn" onclick="startMotor()">Start</button>
+
+        <div class="controls">
+            <div class="row">
+                <button class="direction-btn" onclick="setDirection('left')">⬅ Left</button>
+                <button class="direction-btn" onclick="setDirection('right')">Right ➡</button>
+            </div>
+            <div class="row">
+                <button class="direction-btn" onclick="setDirection('forward')">⬆ Forward</button>
+                <button class="direction-btn" onclick="setDirection('backward')">⬇ Backward</button>
+            </div>
+        </div>
+
+        <button class="stop-btn" onclick="stopMotor()">Stop</button>
+    </div>
+
+   
+    <script>
+        async function setDirection(direction) {
+            const response = await fetch("/direction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ direction: direction })
+            });
+            const data = await response.json();
+            // alert(data.status);
+        }
+
+        async function startMotor() {
+            const response = await fetch("/start", { method: "POST" });
+            const data = await response.json();
+            // alert(data.status);
+        }
+
+        async function stopMotor() {
+            const response = await fetch("/stop", { method: "POST" });
+            const data = await response.json();
+            // alert(data.status);
+        }
+    </script>
+
+</body>
+</html>
